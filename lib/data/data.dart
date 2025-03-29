@@ -31,12 +31,6 @@ class Data {
 
   }
 
-  static Future<String> getOwnerById(int ownerId) async {
-    final owner = await colleccionOwners.find(where.eq('id_propietario', ownerId)).toList();
-    final ownerMap = Owner.fromMap(owner);
-    return ownerMap.name;
-  }
-
   static addOwner(Owner owner) async {
     await colleccionOwners.insertAll([owner.toMap()]);
   }
@@ -93,6 +87,26 @@ class Data {
     }
   }
 
+  static Future<List<Map<String, dynamic>>> getDoctorForId(int doctorId) async{
+    try{
+      final doctor = await colleccionDoctores.find(where.eq('id_doctor', doctorId)).toList();
+      return doctor;
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getVaccines() async{
+    try{
+      final vaccineslist = await colleccionVacunas.find().toList();
+      return vaccineslist;
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
+
   static addDoctor(Doctor doctor) async{
     await colleccionDoctores.insertAll([doctor.toMap()]);
   }
@@ -107,12 +121,35 @@ class Data {
     }
   }
 
-//  static generateDoctorId() {
-//    return doctors.length.toString();
-//  }
+  static Future<List<Map<String, dynamic>>> getClinica() async{
+    try{
+      final clinicas = await colleccionClinica.find().toList();
+      return clinicas;
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
 
-//  static List<Vaccine> getVaccinesForPet(String petId) {
-//    final pet = getPetById(petId);
-//    return [];
-//  }
+  static Future<List<Map<String, dynamic>>> getClinicaForId(int sedeId) async{
+    try{
+      final sede = await colleccionClinica.find(where.eq('id_sede', sedeId)).toList();
+      return sede;
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getOwnerForId(String idOwner) async{
+    try{
+      final ownerId = int.parse(idOwner.substring(0, idOwner.indexOf('-')));
+      final sede = await colleccionOwners.find(where.eq('id_propietario', ownerId)).toList();
+      return sede;
+    } catch (e) {
+      print(e);
+      return Future.value();
+    }
+  }
+
 }

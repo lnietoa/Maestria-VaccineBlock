@@ -1,5 +1,4 @@
 import 'package:blockchain_vaccine_project/data/VacunaBlock.dart';
-import 'package:blockchain_vaccine_project/models/doctor.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -9,6 +8,8 @@ import '../models/pet.dart';
 import '../models/vaccine.dart';
 import '../utils/constants.dart';
 import 'package:mongo_dart/mongo_dart.dart' as M;
+
+import '../widgets/dynamic_background.dart';
 
 class RegisterVaccinePage extends StatelessWidget {
   final Pet pet;
@@ -20,9 +21,9 @@ class RegisterVaccinePage extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     final vaccineNameController = TextEditingController();
     final dateController = TextEditingController();
-    final sedeController = TextEditingController();
     final laboratorioController = TextEditingController();
     String? selectedDoctorId;
+    String? selectedSedeId;
 
 
 
@@ -44,13 +45,13 @@ class RegisterVaccinePage extends StatelessWidget {
     void registerVaccine() async {
       final vaccineName = vaccineNameController.text;
       final date = dateController.text;
-      final vet = selectedDoctorId;
-      final sede = sedeController.text;
+      final vet = selectedDoctorId ?? '';
+      final sede = selectedSedeId ?? '';
       final laboratorio = laboratorioController.text;
       if (vaccineName.isNotEmpty &&
           date.isNotEmpty &&
-          vet != null &&
-          sede.isNotEmpty &&
+          vet != '' &&
+          sede != '' &&
           laboratorio.isNotEmpty) {
         //var get = await VacunaBlock.getVacunar();
         var VacId = await VacunaBlock.RegistrarBlock(
@@ -102,32 +103,12 @@ class RegisterVaccinePage extends StatelessWidget {
     }
 
 
-    return FutureBuilder(
-        future: Data.getDoctors(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-                color: Colors.white,
-                child: const LinearProgressIndicator(
-                    backgroundColor: Colors.black));
-
-          } else if (snapshot.hasError) {
-            return Container(
-                color: Colors.white,
-                child: Center(
-                    child: Text(
-                      "Lo sentimos. Error cargando veterinarios.",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headlineMedium,
-                    )));
-          }
-          return Scaffold(
+         return Scaffold(
             appBar: AppBar(
               title: const Text('Registrar Vacuna'),
             ),
-            body: Padding(
+            body: DynamicBackground(
+            child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Card(
                 shape: RoundedRectangleBorder(
@@ -196,7 +177,7 @@ class RegisterVaccinePage extends StatelessWidget {
                             } else {
                               final doctorItems = snapshot.data!.map((doctor) {
                                 return DropdownMenuItem<String>(
-                                  value: doctor['id'] as String,
+                                  value: doctor['id_doctor'].toString(), // Usar id_doctor como valor
                                   child: Text(doctor['name'] as String),
                                 );
                               }).toList();
@@ -218,14 +199,37 @@ class RegisterVaccinePage extends StatelessWidget {
                           },
                         ),
                         const SizedBox(height: 10),
-                        TextFormField(
-                          controller: sedeController,
-                          decoration: inputDecoration('Sede'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese el nombre de la sede clinica';
+                        FutureBuilder<List<Map<String, dynamic>>>(
+                          future: Data.getClinica(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return const Text('Error al cargar los doctores');
+                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Text('No hay doctores disponibles');
+                            } else {
+                              final clinicaItems = snapshot.data!.map((clinica) {
+                                return DropdownMenuItem<String>(
+                                  value: clinica['id_sede'].toString(), // Usar id_doctor como valor
+                                  child: Text(clinica['nombre_sede'] as String),
+                                );
+                              }).toList();
+                              return DropdownButtonFormField<String>(
+                                decoration: inputDecoration('Sede'),
+                                value: selectedSedeId,
+                                items: clinicaItems,
+                                onChanged: (String? newValue) {
+                                  selectedSedeId = newValue;
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor seleccione una Sede';
+                                  }
+                                  return null;
+                                },
+                              );
                             }
-                            return null;
                           },
                         ),
                         const SizedBox(height: 10),
@@ -239,7 +243,7 @@ class RegisterVaccinePage extends StatelessWidget {
                 ),
               ),
             ),
+          ),
           );
-        });
+        }
   }
-}

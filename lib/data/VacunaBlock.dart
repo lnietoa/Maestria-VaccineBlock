@@ -71,10 +71,8 @@ class Vacunablock extends ChangeNotifier{
     var lista = Map<dynamic,dynamic>();
     lista.addAll({'Bloque':res!.blockNumber.blockNum});
     lista.addAll({'Transaccion': res.transactionIndex});
-    lista.addAll({'Contrato.:':res.to});
+    lista.addAll({'Contrato':res.to});
 
-    print('vacuna:');
-    print(res);
     loading = false;
     notifyListeners();
 

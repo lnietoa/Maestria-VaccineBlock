@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import '../components/menu.dart';
+import '../data/data.dart';
 import '../utils/locales.dart';
 import '../widgets/dynamic_background.dart';
+import '../pages/doctors_list.dart';
+import '../pages/vaccines_list.dart';
+import '../pages/owners_list.dart';
+import '../pages/pets_list.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -21,33 +26,159 @@ class DashboardPage extends StatelessWidget {
             crossAxisSpacing: 16.0,
             mainAxisSpacing: 16.0,
             children: <Widget>[
-              _buildDashboardCard(
-                context,
-                icon: Icons.pets,
-                title: 'Mascotas',
-                data: '150',
-                color: Colors.blue,
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: Data.getPets(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text('Error al cargar las mascotas');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return _buildDashboardCard(
+                      context,
+                      icon: Icons.pets,
+                      title: 'Mascotas',
+                      data: '0',
+                      color: Colors.blue,
+                      onTapFunction: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PetsListPage()),
+                        );
+                      }
+                    );
+                  } else {
+                    return _buildDashboardCard(
+                      context,
+                      icon: Icons.pets,
+                      title: 'Mascotas',
+                      data: snapshot.data!.length.toString(),
+                      color: Colors.blue,
+                      onTapFunction: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PetsListPage()),
+                        );
+                      }
+                    );
+                  }
+                },
               ),
-              _buildDashboardCard(
-                context,
-                icon: Icons.person,
-                title: 'Dueños',
-                data: '75',
-                color: Colors.green,
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: Data.getOwners(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text('Error al cargar los propietarios');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return _buildDashboardCard(
+                      context,
+                      icon: Icons.person,
+                      title: 'Propietarios',
+                      data: '0',
+                      color: Colors.green,
+                      onTapFunction: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const OwnersListPage()),
+                        );
+                      }
+                    );
+                  } else {
+                    return _buildDashboardCard(
+                      context,
+                      icon: Icons.person,
+                      title: 'Propietarios',
+                      data: snapshot.data!.length.toString(),
+                      color: Colors.green,
+                      onTapFunction: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const OwnersListPage()),
+                        );
+                      }
+                    );
+                  }
+                },
               ),
-              _buildDashboardCard(
-                context,
-                icon: Icons.event,
-                title: 'Doctores',
-                data: '10',
-                color: Colors.orange,
+
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: Data.getDoctors(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text('Error al cargar los doctores');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return _buildDashboardCard(
+                      context,
+                      icon: Icons.person_pin_outlined,
+                      title: 'Doctores',
+                      data: '0',
+                      color: Colors.orange,
+                      onTapFunction: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const DoctorsListPage()),
+                        );
+                      }
+                    );
+                  } else {
+                    return _buildDashboardCard(
+                        context,
+                        icon: Icons.person_pin_outlined,
+                        title: 'Doctores',
+                        data: snapshot.data!.length.toString(),
+                        color: Colors.orange,
+                        onTapFunction: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const DoctorsListPage()),
+                          );
+                        }
+                    );
+                  }
+                },
               ),
-              _buildDashboardCard(
-                context,
-                icon: Icons.medical_services,
-                title: 'Vacunas',
-                data: '5',
-                color: Colors.red,
+
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: Data.getVaccines(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text('Error al cargar las vacunas');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return _buildDashboardCard(
+                      context,
+                      icon: Icons.medical_services,
+                      title: 'Vacunas',
+                      data: '0',
+                      color: Colors.red,
+                        onTapFunction: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PetsListPage()),
+                          );
+                        }
+                    );
+                  } else {
+                    return _buildDashboardCard(
+                      context,
+                      icon: Icons.medical_services,
+                      title: 'Vacunas',
+                      data: snapshot.data!.length.toString(),
+                      color: Colors.red,
+                      onTapFunction: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PetsListPage()),
+                        );
+                      }
+                    );
+                  }
+                },
               ),
             ],
           ),
@@ -56,8 +187,10 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDashboardCard(BuildContext context, {required IconData icon, required String title, required String data, required Color color}) {
-    return Card(
+  Widget _buildDashboardCard(BuildContext context, {required IconData icon, required String title, required String data, required Color color, required Function() onTapFunction }) {
+    return GestureDetector(
+        onTap: onTapFunction,
+    child: Card(
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -89,6 +222,7 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
       ),
+    )
     );
   }
 }

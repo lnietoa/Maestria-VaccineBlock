@@ -58,13 +58,27 @@ class PetsListPage extends StatelessWidget {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                FutureBuilder<List<Map<String, dynamic>>>(
+                                  future: Data.getOwnerForId(pet.id_mascota),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError) {
+                                      return const Text('Error al cargar el Propietario');
+                                    } else {
+                                      if (snapshot.data?.isEmpty ?? true) {
+                                        return const Text('Nombre del Propietario no disponible');
+                                      }else {
+                                        var nameOwner = snapshot.data?[0]['nombre_prop'];
+                                        return Text('Propietario: $nameOwner');
+                                      }
+                                    }
+                                  },
+                                ),
                                 Text('ID: ${pet.id_mascota}'),
                                 Text('Especie: ${pet.species}'),
                                 Text('Raza: ${pet.race}'),
                                 Text('Color: ${pet.color}'),
                                 Text('Sexo: ${pet.sex}'),
                                 Text('Fecha Nacimiento: ${pet.fecha_nac}'),
-//                                Text('Dueño: $ownerName'),
                                 const SizedBox(height: 20),
                                 Row(
                                   children: [

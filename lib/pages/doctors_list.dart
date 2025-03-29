@@ -2,6 +2,7 @@
 // File: lib/pages/doctors_list.dart
 
 import 'package:flutter/material.dart';
+import '../components/menu.dart';
 import '../data/data.dart';
 import '../models/doctor.dart';
 import '../widgets/dynamic_background.dart';
@@ -11,7 +12,6 @@ class DoctorsListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //  final List<Doctor> doctors = Data.getDoctors();
     return FutureBuilder(
         future: Data.getDoctors(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -36,6 +36,7 @@ class DoctorsListPage extends StatelessWidget {
               appBar: AppBar(
                 title: const Text('Lista de Doctores'),
               ),
+              drawer: const Menu(),
               body: DynamicBackground(
                 child: snapshot.hasError
                     ? const Center(
@@ -61,7 +62,6 @@ class DoctorsListPage extends StatelessWidget {
                           children: [
                             Text('Identificacion: ${doctor.id_doctor.toString()}'),
                             Text('Num_TP: ${doctor.num_tp.toString()}'),
-                            Text('Sede Asignada: ${doctor.id_sede.toString()}'),
                             Text('Contacto: ${doctor.contact.toString()}'),
                           ],
                         ),

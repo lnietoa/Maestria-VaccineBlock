@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/menu.dart';
 import '../utils/constants.dart';
 import '../data/data.dart';
 import '../models/doctor.dart';
@@ -9,7 +10,6 @@ class RegisterDoctorPage extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final idController = TextEditingController();
-  final sedeController = TextEditingController();
   final numtpController = TextEditingController();
   final contactController = TextEditingController();
 
@@ -42,7 +42,6 @@ class RegisterDoctorPage extends StatelessWidget {
         id: M.ObjectId(),
         id_doctor: int.parse(idController.text),
         name: nameController.text,
-        id_sede: int.parse(sedeController.text),
         num_tp: int.parse(numtpController.text),
         contact: int.parse(contactController.text),
       );
@@ -55,7 +54,6 @@ class RegisterDoctorPage extends StatelessWidget {
       idController.clear();
       nameController.clear();
       numtpController.clear();
-      sedeController.clear();
       contactController.clear();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -70,6 +68,7 @@ class RegisterDoctorPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Registrar Doctor'),
       ),
+      drawer: const Menu(),
       body: DynamicBackground( // Wrap the main content with DynamicBackground
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -114,17 +113,6 @@ class RegisterDoctorPage extends StatelessWidget {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor ingrese el numero de la tarjeta profesional';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: sedeController,
-                        decoration: inputDecoration('Sede Asignada'),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese la sede donde esta asignado';
                           }
                           return null;
                         },
