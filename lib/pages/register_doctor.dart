@@ -72,7 +72,15 @@ class RegisterDoctorPage extends StatelessWidget {
       body: DynamicBackground( // Wrap the main content with DynamicBackground
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Center(
+          child: Column(
+            children: <Widget>[
+              Image.asset(
+                'assets/images/doctor.png',
+                width: 225,
+                height: 225,
+              ),
+              const SizedBox(height: 20),
+          Center(
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -138,6 +146,8 @@ class RegisterDoctorPage extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+            ],
           ),
         ),
       ),

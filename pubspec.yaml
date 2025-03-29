@@ -84,6 +84,8 @@ flutter:
     - assets/images/banner2.png
     - assets/images/owners.png
     - assets/images/dogs.png
+    - assets/images/doctor.png
+    - assets/images/Vaccine.png
     - assets/icons/
     - abis/Vacunacion.json
     - .env

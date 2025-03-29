@@ -53,7 +53,6 @@ class RegisterVaccinePage extends StatelessWidget {
           vet != '' &&
           sede != '' &&
           laboratorio.isNotEmpty) {
-        //var get = await VacunaBlock.getVacunar();
         var VacId = await VacunaBlock.RegistrarBlock(
             pet.id_mascota, sede, vet, vaccineName, date, laboratorio);
 
@@ -110,7 +109,15 @@ class RegisterVaccinePage extends StatelessWidget {
             body: DynamicBackground(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Card(
+              child: Column(
+                children: <Widget>[
+              Image.asset(
+              'assets/images/Vaccine.png',
+                width: 180,
+                height: 180,
+              ),
+              const SizedBox(height: 20),
+              Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
@@ -241,6 +248,8 @@ class RegisterVaccinePage extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+                ],
               ),
             ),
           ),
