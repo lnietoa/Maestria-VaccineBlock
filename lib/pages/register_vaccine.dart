@@ -113,8 +113,8 @@ class RegisterVaccinePage extends StatelessWidget {
                 children: <Widget>[
               Image.asset(
               'assets/images/Vaccine.png',
-                width: 180,
-                height: 180,
+                width: 140,
+                height: 140,
               ),
               const SizedBox(height: 20),
               Card(
