@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../data/data.dart';
 import 'dashboard.dart';
 import '../utils/constants.dart';
 import '../utils/locales.dart';
@@ -16,11 +17,12 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login() {
+  Future<void> _login() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
 
     if (username == 'admin' && password == 'admin') {
+      await Data.conectar();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const DashboardPage()),

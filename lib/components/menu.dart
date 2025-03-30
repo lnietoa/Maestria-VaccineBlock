@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/data.dart';
 import '../utils/constants.dart';
 import '../utils/locales.dart';
 import '../pages/register_owner.dart';
@@ -102,7 +103,8 @@ class Menu extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout, color: AppConstants.iconColor),
             title: const Text(MenuStrings.logout, style: TextStyle(color: AppConstants.textColor)),
-            onTap: () {
+            onTap: () async {
+              await Data.desconectar();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const LoginPage()),

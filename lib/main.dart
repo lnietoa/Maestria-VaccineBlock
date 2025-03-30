@@ -6,7 +6,6 @@ import '../data/data.dart';
 import 'data/VacunaBlock.dart';
 
 void main() async {
-  await Data.conectar();
   runApp(const MyApp());
 }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:mongo_dart/mongo_dart.dart';
 import '../models/doctor.dart';
 import '../models/owner.dart';
@@ -5,12 +7,23 @@ import '../models/pet.dart';
 import '../models/vaccine.dart';
 import '../data/constants.dart';
 
+//class MyHttpOverrides extends HttpOverrides {
+//  @override
+//  HttpClient createHttpClient(SecurityContext? context) {
+//    return super.createHttpClient(context)
+//      ..findProxy = (uri) {
+//        return "PROXY 8.8.8.8:53";
+//      };
+//  }
+//}
+
 class Data {
 
   static var bd, colleccionOwners, colleccionMascotas, colleccionVacunas;
   static var colleccionDoctores, colleccionClinica;
 
   static conectar() async {
+//    HttpOverrides.global = MyHttpOverrides();
     bd = await Db.create(Conexion);
     await bd.open();
     colleccionOwners = bd.collection(colleccion_propietarios);
@@ -18,6 +31,11 @@ class Data {
     colleccionVacunas = bd.collection(colleccion_vacunas);
     colleccionDoctores = bd.collection(colleccion_doctores);
     colleccionClinica = bd.collection(colleccion_clinica);
+  }
+
+  static desconectar() async {
+//    HttpOverrides.global = MyHttpOverrides();
+    await bd.close();
   }
 
   static Future<List<Map<String, dynamic>>> getOwners() async{
